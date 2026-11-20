@@ -21,94 +21,205 @@ body{
   display:flex;flex-direction:column;overflow:hidden;
   background-image:radial-gradient(60% 50% at 20% 0%,#2a1450 0%,transparent 70%),radial-gradient(50% 45% at 100% 100%,#0b2f4a 0%,transparent 70%);
 }
-header{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-  padding:12px clamp(12px,3vw,28px);border-bottom:1px solid var(--line);flex-wrap:wrap;
-}
-.brand{font-weight:700;font-size:1.25rem;letter-spacing:.04em;direction:ltr;
-  color:var(--cyan);text-shadow:0 0 12px var(--cyan),0 0 28px #2ef2ff66}
-.brand b{color:var(--pink);text-shadow:0 0 12px var(--pink),0 0 28px #ff3cac66}
-.hud{display:flex;gap:clamp(12px,3vw,32px);align-items:center}
-.stat{display:flex;flex-direction:column;align-items:center;min-width:56px}
-.stat span{font-size:.75rem;color:var(--muted)}
-.stat strong{font-size:1.45rem;font-variant-numeric:tabular-nums;direction:ltr}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px clamp(12px,3vw,28px);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.brand{font-weight:700;font-size:1.25rem;letter-spacing:.06em;direction:ltr;color:var(--pink);text-shadow:0 0 12px var(--pink),0 0 28px #ff3cac66}
+.hud{display:flex;gap:clamp(10px,2.4vw,28px);align-items:center;flex-wrap:wrap;justify-content:center}
+.stat{display:flex;flex-direction:column;align-items:center;min-width:48px}
+.stat span{font-size:.72rem;color:var(--muted)}
+.stat strong{font-size:1.35rem;font-variant-numeric:tabular-nums;direction:ltr}
+#level{color:var(--amber);text-shadow:0 0 10px #ffc53d88}
 #time.low{color:var(--pink);text-shadow:0 0 10px var(--pink)}
 .lives{display:flex;gap:6px;direction:ltr}
 .lives i{width:14px;height:14px;border-radius:50%;background:var(--pink);box-shadow:0 0 10px var(--pink);transition:.2s}
 .lives i.off{background:transparent;box-shadow:none;border:1px solid var(--line)}
 #mute{background:none;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit}
-main{flex:1;min-height:0;position:relative;padding:clamp(8px,2vw,20px)}
-#stage{position:relative;width:100%;height:100%;border:1px solid var(--line);border-radius:18px;overflow:hidden;
-  background:#0d0a1f;box-shadow:inset 0 0 60px #1d0f4a88,0 0 40px #2ef2ff14}
+main{flex:1;min-height:0;padding:clamp(8px,2vw,20px)}
+#stage{position:relative;width:100%;height:100%;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#0d0a1f;box-shadow:inset 0 0 60px #1d0f4a88,0 0 40px #2ef2ff14}
 canvas{display:block;width:100%;height:100%;cursor:crosshair;touch-action:manipulation}
-.overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:14px;text-align:center;padding:24px;background:#0a0816d9;backdrop-filter:blur(6px)}
+.overlay{position:absolute;inset:0;display:flex;overflow:auto;padding:20px;background:#0a0816ec;backdrop-filter:blur(6px)}
 .overlay[hidden]{display:none}
-.overlay h1{margin:0;font-size:clamp(2.2rem,7vw,4.4rem);direction:ltr;letter-spacing:.03em;
-  color:var(--cyan);text-shadow:0 0 18px var(--cyan),0 0 50px #2ef2ff88}
-.overlay h1 b{color:var(--pink);text-shadow:0 0 18px var(--pink),0 0 50px #ff3cac88}
-.overlay p{margin:0;color:var(--muted);max-width:42ch;line-height:1.8}
-.big{font-size:clamp(2.6rem,9vw,5rem);font-weight:700;color:var(--amber);text-shadow:0 0 22px #ffc53d88;direction:ltr}
-.badge{color:var(--lime);font-weight:700;text-shadow:0 0 12px #7dff6b88}
-.btn{
-  font:inherit;font-weight:700;font-size:1.15rem;color:#0a0816;background:var(--cyan);
-  border:0;border-radius:14px;padding:14px 38px;cursor:pointer;
-  box-shadow:0 0 22px #2ef2ff99,0 0 60px #2ef2ff44;transition:transform .12s,box-shadow .12s;
-}
+.box{margin:auto;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;width:min(100%,460px)}
+.overlay h1{margin:0;font-size:clamp(2.6rem,9vw,4.6rem);direction:ltr;letter-spacing:.06em;color:var(--pink);text-shadow:0 0 18px var(--pink),0 0 50px #ff3cac88}
+.overlay p{margin:0;color:var(--muted);line-height:1.8}
+.big{font-size:clamp(2.6rem,9vw,4.4rem);font-weight:700;color:var(--amber);text-shadow:0 0 22px #ffc53d88;direction:ltr;line-height:1}
+.msg{font-weight:700;color:var(--lime);text-shadow:0 0 12px #7dff6b88;font-size:1.1rem}
+.msg.rec{color:var(--amber);text-shadow:0 0 14px #ffc53d99;font-size:1.25rem}
+.btn{font:inherit;font-weight:700;font-size:1.15rem;color:#0a0816;background:var(--cyan);border:0;border-radius:14px;padding:13px 38px;cursor:pointer;box-shadow:0 0 22px #2ef2ff99,0 0 60px #2ef2ff44;transition:transform .12s}
 .btn:hover{transform:scale(1.05)}
-.btn:focus-visible,#mute:focus-visible{outline:3px solid var(--amber);outline-offset:3px}
-@media (prefers-reduced-motion:reduce){.btn{transition:none}}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.btn:focus-visible,#mute:focus-visible,#name:focus-visible{outline:3px solid var(--amber);outline-offset:3px}
+#name{width:100%;font:inherit;font-size:16px;text-align:center;color:var(--text);background:var(--panel);border:1px solid var(--cyan);border-radius:12px;padding:12px 14px;box-shadow:0 0 16px #2ef2ff33}
+.board{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 12px;text-align:start}
+.board h2{margin:0 0 6px;font-size:.95rem;color:var(--cyan);display:flex;justify-content:space-between;gap:8px}
+.board h2 small{color:var(--muted);font-weight:500}
+.board ol{list-style:none;margin:0;padding:0}
+.board li{display:grid;grid-template-columns:28px 1fr auto 46px;gap:8px;align-items:center;padding:5px 4px;border-top:1px solid #ffffff0d;font-size:.95rem}
+.board li:first-child{border-top:0}
+.board li .rk{color:var(--muted);direction:ltr;text-align:center}
+.board li .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.board li .sc{font-weight:700;color:var(--amber);direction:ltr}
+.board li .lv{color:var(--muted);font-size:.8rem;direction:ltr;text-align:end}
+.board li.me{background:#2ef2ff1a;border-radius:8px}
+.board li.top .rk{color:var(--amber);font-weight:700}
+.empty{color:var(--muted);font-size:.9rem;padding:6px 0}
+#banner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;direction:ltr}
+#banner span{font-size:clamp(2.8rem,12vw,7rem);font-weight:700;letter-spacing:.08em;color:var(--cyan);text-shadow:0 0 20px var(--cyan),0 0 60px #2ef2ffaa,0 0 110px #ff3cac88}
+#banner.show{animation:pop 1.5s ease-out}
+@keyframes pop{0%{opacity:0;transform:scale(.4)}15%{opacity:1;transform:scale(1.08)}30%{transform:scale(1)}75%{opacity:1}100%{opacity:0;transform:scale(1.25)}}
+@media (prefers-reduced-motion:reduce){.btn{transition:none}#banner.show{animation:none;opacity:1}}
 @media (max-width:560px){header{justify-content:center}}
 </style>
 </head>
 <body>
 <header>
-  <div class="brand"><b>DJWAR</b></div>
-  <div class="hud" aria-live="off">
+  <div class="brand">DJWAR</div>
+  <div class="hud">
+    <div class="stat"><span>یاریزان</span><strong id="who" style="font-size:1rem;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">-</strong></div>
+    <div class="stat"><span>لیڤل</span><strong id="level">1</strong></div>
     <div class="stat"><span>خاڵ</span><strong id="score">0</strong></div>
-    <div class="stat"><span>باشترین خاڵ</span><strong id="best">0</strong></div>
+    <div class="stat"><span>باشترین</span><strong id="best">0</strong></div>
     <div class="stat"><span>دەم</span><strong id="time">60</strong></div>
     <div class="stat"><span>ژیان</span><div class="lives" id="lives"><i></i><i></i><i></i></div></div>
-    <button id="mute" type="button" aria-pressed="false">🔊</button>
+    <button id="mute" type="button" aria-pressed="false" aria-label="دەنگ">🔊</button>
   </div>
 </header>
 
 <main>
   <div id="stage">
     <canvas id="cv"></canvas>
+    <div id="banner" aria-hidden="true"><span id="bannerText">LEVEL 2</span></div>
 
     <section class="overlay" id="start">
-      <h1><b>DJWAR</b></h1>
-      <p>ئامانجێن نیۆنی دێ دیار بن و زوی ژ ناڤ چن. ب ماوسێ کلیک ل سەر بکە پێش کو وندا ببن. هەر چەند خاڵ زێدەتر بن، یاری خێراتر دبیت.</p>
-      <p>٦٠ چرکە و ٣ ژیان هەنە. ئەگەر ئامانجەک ژ دەست بچیت، ژیانەک دێ کێم بیت.</p>
-      <button class="btn" id="play" type="button">یاری بکە</button>
+      <div class="box">
+        <h1>DJWAR</h1>
+        <p>ب ماوسێ یان ب ئەنگوستان ل سەر ئامانجێن نیۆنی بدە پێش کو وندا ببن. هەر ١٢٠ خاڵان لیڤلەک دچیتە سەر و یاری خێراتر دبیت.</p>
+        <input id="name" type="text" maxlength="16" autocomplete="nickname" placeholder="ناڤێ خۆ بنڤیسە">
+        <button class="btn" id="play" type="button" disabled>یاری بکە</button>
+        <div class="board"><h2><span>ڕێزبەندی</span><small id="mode1"></small></h2><ol id="list1"></ol></div>
+      </div>
     </section>
 
     <section class="overlay" id="over" hidden>
-      <p id="why"></p>
-      <div class="big" id="final">0</div>
-      <p id="record" class="badge" hidden>ڕێکۆردێ نوی!</p>
-      <p>باشترین خاڵ: <span id="finalBest" dir="ltr">0</span></p>
-      <button class="btn" id="again" type="button">یاری ژ نوو</button>
+      <div class="box">
+        <p id="why"></p>
+        <div class="big" id="final">0</div>
+        <p>لیڤل: <b id="finalLevel" dir="ltr">1</b> &nbsp;|&nbsp; باشترین خاڵ: <b id="finalBest" dir="ltr">0</b></p>
+        <div class="msg" id="rival" hidden></div>
+        <div class="msg" id="rankMsg" hidden></div>
+        <button class="btn" id="again" type="button">یاری ژ نوو</button>
+        <div class="board"><h2><span>ڕێزبەندی</span><small id="mode2"></small></h2><ol id="list2"></ol></div>
+      </div>
     </section>
   </div>
 </main>
 
 <script>
+/* ==========================================================
+   FIREBASE: تەنێ databaseURL ل ڤێرێ دابنێ.
+   نموونە: "https://djwar-12345-default-rtdb.firebaseio.com"
+   ئەگەر ڤالا بیت، یاری ب شێوەیێ خۆجهی (localStorage) کار دکەت.
+   ========================================================== */
+const firebaseConfig = {
+  databaseURL: ""
+};
+
 (() => {
   const $ = id => document.getElementById(id);
   const cv = $('cv'), ctx = cv.getContext('2d');
-  const scoreEl = $('score'), bestEl = $('best'), timeEl = $('time'), livesEl = $('lives').children;
+  const livesEl = $('lives').children;
   const COLORS = ['#2ef2ff', '#ff3cac', '#ffc53d', '#7dff6b'];
-  const GAME_SECONDS = 60, MAX_LIVES = 3, KEY = 'neonReflexBest';
+  const GAME_SECONDS = 60, MAX_LIVES = 3, PTS_PER_LEVEL = 120;
+  const K_NAME = 'djwarName', K_BEST = 'djwarBest', K_BOARD = 'djwarBoard';
 
-  // ---------- High score (localStorage, always guarded) ----------
-  let best = 0;
-  try { best = parseInt(localStorage.getItem(KEY), 10) || 0; } catch (e) {}
-  const saveBest = () => { try { localStorage.setItem(KEY, String(best)); } catch (e) {} };
-  bestEl.textContent = best;
+  /* ---------- Safe localStorage ---------- */
+  const ls = {
+    get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  };
 
-  // ---------- Sound (Web Audio) ----------
+  /* ---------- Player ---------- */
+  let playerName = (ls.get(K_NAME) || '').trim().slice(0, 16);
+  const nameInput = $('name');
+  nameInput.value = playerName;
+  const keyOf = n => (n || '').trim().toLowerCase().replace(/[.$#\[\]\/\s]+/g, '_').slice(0, 32) || 'player';
+  function syncName() {
+    playerName = nameInput.value.trim().slice(0, 16);
+    $('play').disabled = playerName.length < 1;
+  }
+  nameInput.addEventListener('input', syncName);
+  syncName();
+
+  /* ---------- Leaderboard (Firebase REST + local fallback) ---------- */
+  const DB = String(firebaseConfig.databaseURL || '').trim().replace(/\/+$/, '');
+  const hasDB = /^https:\/\//.test(DB);
+  let usingRemote = false;
+
+  const cleanEntry = e => e && typeof e.name === 'string' && Number.isFinite(+e.score)
+    ? { key: e.key || keyOf(e.name), name: e.name.slice(0, 16), score: +e.score, level: +e.level || 1, t: +e.t || 0 } : null;
+  const sortBoard = arr => arr.sort((a, b) => b.score - a.score || a.t - b.t);
+
+  function localBoard() {
+    try {
+      const o = JSON.parse(ls.get(K_BOARD) || '{}');
+      return sortBoard(Object.values(o).map(cleanEntry).filter(Boolean));
+    } catch (e) { return []; }
+  }
+  function saveLocal(entry) {
+    let o = {};
+    try { o = JSON.parse(ls.get(K_BOARD) || '{}') || {}; } catch (e) {}
+    if (!o[entry.key] || o[entry.key].score < entry.score) o[entry.key] = entry;
+    ls.set(K_BOARD, JSON.stringify(o));
+  }
+  async function loadBoard() {
+    if (hasDB) {
+      try {
+        const r = await fetch(DB + '/scores.json');
+        if (!r.ok) throw new Error(r.status);
+        const d = (await r.json()) || {};
+        usingRemote = true;
+        return sortBoard(Object.entries(d).map(([k, v]) => cleanEntry({ ...v, key: k })).filter(Boolean));
+      } catch (e) { usingRemote = false; }
+    }
+    return localBoard();
+  }
+  async function saveScore(entry) {
+    saveLocal(entry);
+    if (!hasDB) return;
+    try {
+      // only write when the new score is higher than what is stored
+      const cur = await fetch(DB + '/scores/' + encodeURIComponent(entry.key) + '.json').then(r => r.json());
+      if (cur && Number(cur.score) >= entry.score) return;
+      await fetch(DB + '/scores/' + encodeURIComponent(entry.key) + '.json', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(entry)
+      });
+    } catch (e) { /* offline: local copy is kept */ }
+  }
+  function renderBoard(ol, modeEl, list) {
+    modeEl.textContent = usingRemote ? 'گشتی (Online)' : 'خۆجهی (Local)';
+    ol.textContent = '';
+    if (!list.length) {
+      const li = document.createElement('li');
+      li.style.display = 'block';
+      li.className = 'empty';
+      li.textContent = 'هێشتا کەس نینە. تو ببە ئێکەم!';
+      ol.appendChild(li);
+      return;
+    }
+    const me = keyOf(playerName);
+    list.slice(0, 10).forEach((e, i) => {
+      const li = document.createElement('li');
+      if (e.key === me) li.classList.add('me');
+      if (i < 3) li.classList.add('top');
+      const mk = (cls, txt) => { const s = document.createElement('span'); s.className = cls; s.textContent = txt; li.appendChild(s); };
+      mk('rk', i + 1); mk('nm', e.name); mk('sc', e.score); mk('lv', 'L' + e.level);
+      ol.appendChild(li);
+    });
+  }
+  async function refreshStartBoard() { renderBoard($('list1'), $('mode1'), await loadBoard()); }
+
+  /* ---------- Sound ---------- */
   let ac = null, muted = false;
   function tone(freq, dur = 0.12, type = 'sine', vol = 0.12, slide = 0) {
     if (muted) return;
@@ -122,13 +233,15 @@ canvas{display:block;width:100%;height:100%;cursor:crosshair;touch-action:manipu
       o.connect(g).connect(ac.destination); o.start(t); o.stop(t + dur);
     } catch (e) {}
   }
+  const seq = (notes, step, type, vol) => notes.forEach((f, i) => setTimeout(() => tone(f, .18, type, vol), i * step));
   const sfx = {
-    hit: combo => tone(520 + Math.min(combo, 20) * 28, 0.11, 'triangle', 0.14, 260),
+    hit: c => tone(520 + Math.min(c, 20) * 28, 0.11, 'triangle', 0.14, 260),
     miss: () => tone(200, 0.3, 'sawtooth', 0.1, -120),
     click: () => tone(140, 0.07, 'square', 0.05),
     start: () => { tone(440, .1, 'square', .08); setTimeout(() => tone(660, .14, 'square', .08), 100); },
+    level: () => seq([523, 659, 784, 1046, 1318], 90, 'triangle', .13),
     over: () => { tone(440, .2, 'sine', .12, -200); setTimeout(() => tone(260, .45, 'sine', .12, -120), 200); },
-    record: () => [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => tone(f, .16, 'triangle', .12), i * 110))
+    record: () => seq([523, 659, 784, 1046], 110, 'triangle', .12)
   };
   $('mute').onclick = () => {
     muted = !muted;
@@ -136,7 +249,7 @@ canvas{display:block;width:100%;height:100%;cursor:crosshair;touch-action:manipu
     $('mute').setAttribute('aria-pressed', muted);
   };
 
-  // ---------- Canvas sizing ----------
+  /* ---------- Canvas ---------- */
   let W = 0, H = 0, dpr = 1;
   function resize() {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -147,37 +260,46 @@ canvas{display:block;width:100%;height:100%;cursor:crosshair;touch-action:manipu
   }
   window.addEventListener('resize', resize);
 
-  // ---------- State ----------
-  let running = false, score, timeLeft, lives, combo, targets, parts, rings, spawnAcc, last;
+  /* ---------- State ---------- */
+  let running = false, score = 0, timeLeft = GAME_SECONDS, lives = MAX_LIVES, combo = 0, level = 1;
+  let targets = [], parts = [], rings = [], spawnAcc = 0, last = 0, personalBest = parseInt(ls.get(K_BEST), 10) || 0;
+  $('best').textContent = personalBest;
 
-  function reset() {
-    score = 0; timeLeft = GAME_SECONDS; lives = MAX_LIVES; combo = 0;
-    targets = []; parts = []; rings = []; spawnAcc = 0.3;
-    updateHud();
-  }
-  const level = () => Math.min(1 + score / 150, 3.5);   // faster as score grows
+  const levelOf = s => 1 + Math.floor(s / PTS_PER_LEVEL);
   const mult = () => Math.min(1 + Math.floor(combo / 5), 5);
 
   function updateHud() {
-    scoreEl.textContent = score;
-    timeEl.textContent = Math.ceil(timeLeft);
-    timeEl.classList.toggle('low', timeLeft <= 10);
+    $('score').textContent = score;
+    $('level').textContent = level;
+    $('time').textContent = Math.ceil(timeLeft);
+    $('time').classList.toggle('low', timeLeft <= 10);
     for (let i = 0; i < MAX_LIVES; i++) livesEl[i].classList.toggle('off', i >= lives);
   }
-
-  function spawn() {
-    const lv = level();
-    const r = Math.max(26, 54 - lv * 5) * (0.8 + Math.random() * 0.4);
-    const pad = r + 12;
-    targets.push({
-      x: pad + Math.random() * (W - pad * 2),
-      y: pad + Math.random() * (H - pad * 2),
-      r, born: 0, life: Math.max(1, 2.8 - lv * 0.35),
-      color: COLORS[Math.floor(Math.random() * COLORS.length)],
-      pts: Math.round(10 + Math.max(0, 50 - r) / 3)
-    });
+  function reset() {
+    score = 0; timeLeft = GAME_SECONDS; lives = MAX_LIVES; combo = 0; level = 1;
+    targets = []; parts = []; rings = []; spawnAcc = 0.3;
+    $('who').textContent = playerName || '-';
+    updateHud();
   }
 
+  /* ---------- Difficulty per level ---------- */
+  const spawnEvery = () => Math.max(0.28, 1.35 - (level - 1) * 0.14);
+  const targetLife = () => Math.max(0.8, 2.8 - (level - 1) * 0.22);
+  const baseRadius = () => Math.max(22, 54 - (level - 1) * 3.5);
+  const moveSpeed = () => level >= 3 ? Math.min(25 + (level - 3) * 14, 130) : 0;
+
+  function spawn() {
+    const r = baseRadius() * (0.8 + Math.random() * 0.4);
+    const pad = r + 12, sp = moveSpeed(), ang = Math.random() * Math.PI * 2;
+    targets.push({
+      x: pad + Math.random() * Math.max(1, W - pad * 2),
+      y: pad + Math.random() * Math.max(1, H - pad * 2),
+      r, born: 0, life: targetLife(),
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      pts: Math.round(10 + Math.max(0, 50 - r) / 3),
+      vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, turn: (Math.random() - .5) * 1.6
+    });
+  }
   function burst(x, y, color, n = 16) {
     for (let i = 0; i < n; i++) {
       const a = Math.random() * Math.PI * 2, s = 60 + Math.random() * 220;
@@ -186,17 +308,34 @@ canvas{display:block;width:100%;height:100%;cursor:crosshair;touch-action:manipu
     rings.push({ x, y, color, t: 0 });
   }
 
-  // ---------- Loop ----------
+  /* ---------- Level up ---------- */
+  function showLevelUp() {
+    const b = $('banner');
+    $('bannerText').textContent = 'LEVEL ' + level;
+    b.classList.remove('show'); void b.offsetWidth; b.classList.add('show');
+    sfx.level();
+  }
+
+  /* ---------- Loop ---------- */
   function frame(now) {
     if (!running) return;
     const dt = Math.min((now - last) / 1000, 0.05); last = now;
-
-    timeLeft -= dt;
-    spawnAcc -= dt;
-    if (spawnAcc <= 0) { spawn(); spawnAcc = Math.max(0.5, 1.4 - level() * 0.2) * (0.7 + Math.random() * 0.6); }
+    timeLeft -= dt; spawnAcc -= dt;
+    if (spawnAcc <= 0) { spawn(); spawnAcc = spawnEvery() * (0.7 + Math.random() * 0.6); }
 
     for (let i = targets.length - 1; i >= 0; i--) {
       const t = targets[i]; t.born += dt;
+      if (t.vx || t.vy) {                       // smooth drifting from level 3
+        const c = Math.cos(t.turn * dt), s = Math.sin(t.turn * dt);
+        const vx = t.vx * c - t.vy * s, vy = t.vx * s + t.vy * c;
+        t.vx = vx; t.vy = vy;
+        t.x += t.vx * dt; t.y += t.vy * dt;
+        const p = t.r + 10;
+        if (t.x < p) { t.x = p; t.vx = Math.abs(t.vx); }
+        if (t.x > W - p) { t.x = W - p; t.vx = -Math.abs(t.vx); }
+        if (t.y < p) { t.y = p; t.vy = Math.abs(t.vy); }
+        if (t.y > H - p) { t.y = H - p; t.vy = -Math.abs(t.vy); }
+      }
       if (t.born >= t.life) {
         targets.splice(i, 1); lives--; combo = 0; sfx.miss();
         rings.push({ x: t.x, y: t.y, color: '#ff3c5a', t: 0 });
@@ -207,8 +346,7 @@ canvas{display:block;width:100%;height:100%;cursor:crosshair;touch-action:manipu
     rings.forEach(r => r.t += dt);
     rings = rings.filter(r => r.t < 0.4);
 
-    updateHud();
-    draw();
+    updateHud(); draw();
     if (lives <= 0) return end('هەمی ژیان ب دوماهی هاتن');
     if (timeLeft <= 0) { timeLeft = 0; updateHud(); return end('دەم ب دوماهی هات'); }
     requestAnimationFrame(frame);
@@ -216,22 +354,18 @@ canvas{display:block;width:100%;height:100%;cursor:crosshair;touch-action:manipu
 
   function draw() {
     ctx.clearRect(0, 0, W, H);
-    // faint grid
     ctx.strokeStyle = '#ffffff08'; ctx.lineWidth = 1;
     for (let x = 0; x < W; x += 48) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
     for (let y = 0; y < H; y += 48) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
 
     for (const t of targets) {
-      const k = 1 - t.born / t.life;              // 1 → 0
-      const pop = Math.min(t.born / 0.12, 1);     // quick appear
-      const r = t.r * pop;
+      const k = 1 - t.born / t.life, r = t.r * Math.min(t.born / 0.12, 1);
       ctx.save();
       ctx.shadowColor = t.color; ctx.shadowBlur = 26;
       ctx.fillStyle = t.color + '33';
       ctx.beginPath(); ctx.arc(t.x, t.y, r, 0, 7); ctx.fill();
       ctx.strokeStyle = t.color; ctx.lineWidth = 3;
       ctx.beginPath(); ctx.arc(t.x, t.y, r, 0, 7); ctx.stroke();
-      // remaining-time ring
       ctx.lineWidth = 4; ctx.lineCap = 'round';
       ctx.beginPath(); ctx.arc(t.x, t.y, r + 8, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * k); ctx.stroke();
       ctx.fillStyle = t.color;
@@ -248,7 +382,6 @@ canvas{display:block;width:100%;height:100%;cursor:crosshair;touch-action:manipu
       ctx.fillRect(p.x - 2, p.y - 2, 4, 4);
     }
     ctx.globalAlpha = 1; ctx.shadowBlur = 0;
-
     if (combo >= 5) {
       ctx.fillStyle = '#ffc53d'; ctx.font = '700 22px "Chakra Petch", sans-serif'; ctx.textAlign = 'left';
       ctx.shadowColor = '#ffc53d'; ctx.shadowBlur = 14;
@@ -257,11 +390,10 @@ canvas{display:block;width:100%;height:100%;cursor:crosshair;touch-action:manipu
     }
   }
 
-  // ---------- Input ----------
+  /* ---------- Input ---------- */
   cv.addEventListener('pointerdown', e => {
     if (!running) return;
     const r = cv.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
-    // hit the closest (newest-first) target under the pointer
     for (let i = targets.length - 1; i >= 0; i--) {
       const t = targets[i];
       if (Math.hypot(x - t.x, y - t.y) <= t.r + 8) {
@@ -270,45 +402,83 @@ canvas{display:block;width:100%;height:100%;cursor:crosshair;touch-action:manipu
         targets.splice(i, 1);
         burst(t.x, t.y, t.color);
         sfx.hit(combo);
-        scoreEl.textContent = score;
+        const nl = levelOf(score);
+        if (nl > level) { level = nl; showLevelUp(); }
+        updateHud();
         return;
       }
     }
-    combo = 0; sfx.click();   // clicked empty space
+    combo = 0; sfx.click();
   });
 
-  // ---------- Flow ----------
+  /* ---------- Game flow ---------- */
   function begin() {
+    syncName();
+    if (!playerName) { nameInput.focus(); return; }
+    ls.set(K_NAME, playerName);
     reset(); resize();
     $('start').hidden = true; $('over').hidden = true;
     sfx.start();
     running = true; last = performance.now();
     requestAnimationFrame(frame);
   }
-  function end(reason) {
+
+  async function end(reason) {
     running = false;
-    const isRecord = score > best && score > 0;
-    if (isRecord) { best = score; saveBest(); bestEl.textContent = best; }
+    const finalScore = score, finalLevel = level, me = keyOf(playerName);
     $('why').textContent = reason;
-    $('final').textContent = score;
-    $('finalBest').textContent = best;
-    $('record').hidden = !isRecord;
+    $('final').textContent = finalScore;
+    $('finalLevel').textContent = finalLevel;
+    $('rival').hidden = true; $('rankMsg').hidden = true;
     $('over').hidden = false;
     $('again').focus();
-    isRecord ? sfx.record() : sfx.over();
+
+    const board = await loadBoard();              // read BEFORE saving, to compare with others
+    const mine = board.find(e => e.key === me);
+    const others = board.filter(e => e.key !== me);
+    const top = others[0];
+    const prev = Math.max(personalBest, mine ? mine.score : 0);
+    const newPersonal = finalScore > prev;
+
+    if (newPersonal) {
+      personalBest = finalScore; ls.set(K_BEST, String(finalScore));
+      $('best').textContent = finalScore;
+      await saveScore({ key: me, name: playerName, score: finalScore, level: finalLevel, t: Date.now() });
+    }
+    $('finalBest').textContent = personalBest;
+
+    const rival = $('rival');
+    let broke = false;
+    if (finalScore > 0 && top && finalScore > top.score) {
+      rival.textContent = 'تە ڕێکۆردێ ' + top.name + ' شکاند! 🏆'; rival.className = 'msg rec'; rival.hidden = false; broke = true;
+    } else if (finalScore > 0 && !top) {
+      rival.textContent = 'تە یەکەم ڕێکۆرد دانا! 🏆'; rival.className = 'msg rec'; rival.hidden = false; broke = true;
+    } else {
+      const beaten = others.find(e => finalScore > e.score);
+      if (beaten) { rival.textContent = 'تە ' + beaten.name + ' بوراند!'; rival.className = 'msg'; rival.hidden = false; }
+    }
+    const rank = others.filter(e => e.score > finalScore).length + 1;
+    const rm = $('rankMsg');
+    rm.textContent = 'پلەیا تە د ڕێزبەندیێ دا: ' + rank + (newPersonal ? '' : ' (ب خاڵا ڤێ جارێ)');
+    rm.hidden = false;
+
+    (broke || newPersonal) ? sfx.record() : sfx.over();
+    renderBoard($('list2'), $('mode2'), await loadBoard());
   }
 
   $('play').onclick = begin;
   $('again').onclick = begin;
   document.addEventListener('keydown', e => {
-    if (!running && (e.key === 'Enter' || e.key === ' ')) {
-      const btn = !$('over').hidden ? $('again') : $('play');
-      if (document.activeElement !== btn) { e.preventDefault(); begin(); }
+    if (running) return;
+    if (e.target === nameInput) { if (e.key === 'Enter') begin(); return; }
+    if (e.key === 'Enter' || e.key === ' ') {
+      if (document.activeElement && document.activeElement.tagName === 'BUTTON') return;
+      e.preventDefault(); begin();
     }
   });
 
-  resize();
-  reset();
+  resize(); reset();
+  refreshStartBoard();
 })();
 </script>
 </body>
