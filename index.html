@@ -95,7 +95,7 @@ canvas{display:block;width:100%;height:100%;cursor:crosshair;touch-action:manipu
         <p>ب ماوسێ یان ب ئەنگوستان ل سەر ئامانجێن نیۆنی بدە پێش کو وندا ببن. هەر ١٢٠ خاڵان لیڤلەک دچیتە سەر و یاری خێراتر دبیت.</p>
         <input id="name" type="text" maxlength="16" autocomplete="nickname" placeholder="ناڤێ خۆ بنڤیسە">
         <button class="btn" id="play" type="button" disabled>یاری بکە</button>
-        <div class="board"><h2><span>ڕێزبەندی</span><small id="mode1"></small></h2><ol id="list1"></ol></div>
+        <div class="board"><h2><span>٥ یاریزانێن سەری</span><small id="mode1"></small></h2><ol id="list1"></ol></div>
       </div>
     </section>
 
@@ -107,7 +107,7 @@ canvas{display:block;width:100%;height:100%;cursor:crosshair;touch-action:manipu
         <div class="msg" id="rival" hidden></div>
         <div class="msg" id="rankMsg" hidden></div>
         <button class="btn" id="again" type="button">یاری ژ نوو</button>
-        <div class="board"><h2><span>ڕێزبەندی</span><small id="mode2"></small></h2><ol id="list2"></ol></div>
+        <div class="board"><h2><span>٥ یاریزانێن سەری</span><small id="mode2"></small></h2><ol id="list2"></ol></div>
       </div>
     </section>
   </div>
@@ -120,7 +120,7 @@ canvas{display:block;width:100%;height:100%;cursor:crosshair;touch-action:manipu
    ئەگەر ڤالا بیت، یاری ب شێوەیێ خۆجهی (localStorage) کار دکەت.
    ========================================================== */
 const firebaseConfig = {
-  databaseURL: ""
+  databaseURL: "https://djwar-game-default-rtdb.firebaseio.com"
 };
 
 (() => {
@@ -152,7 +152,7 @@ const firebaseConfig = {
   /* ---------- Leaderboard (Firebase REST + local fallback) ---------- */
   const DB = String(firebaseConfig.databaseURL || '').trim().replace(/\/+$/, '');
   const hasDB = /^https:\/\//.test(DB);
-  let usingRemote = false;
+  let usingRemote = false, dbError = '';
 
   const cleanEntry = e => e && typeof e.name === 'string' && Number.isFinite(+e.score)
     ? { key: e.key || keyOf(e.name), name: e.name.slice(0, 16), score: +e.score, level: +e.level || 1, t: +e.t || 0 } : null;
@@ -170,15 +170,25 @@ const firebaseConfig = {
     if (!o[entry.key] || o[entry.key].score < entry.score) o[entry.key] = entry;
     ls.set(K_BOARD, JSON.stringify(o));
   }
+  async function fb(path, opts) {
+    const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 8000);
+    try {
+      const r = await fetch(DB + path, Object.assign({}, opts || {}, { signal: ctl.signal }));
+      let body = null;
+      try { body = await r.json(); } catch (e) {}
+      if (!r.ok) throw new Error(body && body.error ? body.error : 'HTTP ' + r.status);
+      return body;
+    } finally { clearTimeout(tm); }
+  }
+  const errText = e => e && e.name === 'AbortError' ? 'timeout' : ((e && e.message) || 'network error');
+
   async function loadBoard() {
     if (hasDB) {
       try {
-        const r = await fetch(DB + '/scores.json');
-        if (!r.ok) throw new Error(r.status);
-        const d = (await r.json()) || {};
-        usingRemote = true;
-        return sortBoard(Object.entries(d).map(([k, v]) => cleanEntry({ ...v, key: k })).filter(Boolean));
-      } catch (e) { usingRemote = false; }
+        const d = (await fb('/scores.json')) || {};
+        usingRemote = true; dbError = '';
+        return sortBoard(Object.entries(d).map(([k, v]) => cleanEntry(Object.assign({}, v, { key: k }))).filter(Boolean));
+      } catch (e) { usingRemote = false; dbError = errText(e); }
     }
     return localBoard();
   }
@@ -186,15 +196,12 @@ const firebaseConfig = {
     saveLocal(entry);
     if (!hasDB) return;
     try {
-      // only write when the new score is higher than what is stored
-      const cur = await fetch(DB + '/scores/' + encodeURIComponent(entry.key) + '.json').then(r => r.json());
+      const path = '/scores/' + encodeURIComponent(entry.key) + '.json';
+      const cur = await fb(path);                       // write only if higher than stored
       if (cur && Number(cur.score) >= entry.score) return;
-      await fetch(DB + '/scores/' + encodeURIComponent(entry.key) + '.json', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(entry)
-      });
-    } catch (e) { /* offline: local copy is kept */ }
+      await fb(path, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(entry) });
+      dbError = '';
+    } catch (e) { dbError = errText(e); }
   }
   function renderBoard(ol, modeEl, list) {
     modeEl.textContent = usingRemote ? 'گشتی (Online)' : 'خۆجهی (Local)';
@@ -208,7 +215,7 @@ const firebaseConfig = {
       return;
     }
     const me = keyOf(playerName);
-    list.slice(0, 10).forEach((e, i) => {
+    list.slice(0, 5).forEach((e, i) => {
       const li = document.createElement('li');
       if (e.key === me) li.classList.add('me');
       if (i < 3) li.classList.add('top');
@@ -217,7 +224,24 @@ const firebaseConfig = {
       ol.appendChild(li);
     });
   }
-  async function refreshStartBoard() { renderBoard($('list1'), $('mode1'), await loadBoard()); }
+  function renderAll(ol, modeEl, list) {
+    renderBoard(ol, modeEl, list);
+    if (hasDB && dbError) {
+      const li = document.createElement('li');
+      li.className = 'empty'; li.style.display = 'block'; li.style.color = '#ff8aa0'; li.style.direction = 'ltr';
+      li.textContent = 'Firebase error: ' + dbError;
+      ol.appendChild(li);
+    }
+  }
+  async function refreshStartBoard() {
+    let board = await loadBoard();
+    const m = localMine(), r = board.find(e => e.key === keyOf(playerName));
+    if (hasDB && usingRemote && m && (!r || r.score < m.score)) {   // upload an old local record
+      await saveScore(m);
+      board = await loadBoard();
+    }
+    renderAll($('list1'), $('mode1'), board);
+  }
 
   /* ---------- Sound ---------- */
   let ac = null, muted = false;
@@ -262,8 +286,10 @@ const firebaseConfig = {
 
   /* ---------- State ---------- */
   let running = false, score = 0, timeLeft = GAME_SECONDS, lives = MAX_LIVES, combo = 0, level = 1;
-  let targets = [], parts = [], rings = [], spawnAcc = 0, last = 0, personalBest = parseInt(ls.get(K_BEST), 10) || 0;
-  $('best').textContent = personalBest;
+  let targets = [], parts = [], rings = [], spawnAcc = 0, last = 0, personalBest = 0;
+  const localMine = () => localBoard().find(e => e.key === keyOf(playerName));
+  function loadPersonal() { const m = localMine(); personalBest = m ? m.score : 0; $('best').textContent = personalBest; }
+  loadPersonal();
 
   const levelOf = s => 1 + Math.floor(s / PTS_PER_LEVEL);
   const mult = () => Math.min(1 + Math.floor(combo / 5), 5);
@@ -416,6 +442,7 @@ const firebaseConfig = {
     syncName();
     if (!playerName) { nameInput.focus(); return; }
     ls.set(K_NAME, playerName);
+    loadPersonal();
     reset(); resize();
     $('start').hidden = true; $('over').hidden = true;
     sfx.start();
@@ -463,7 +490,7 @@ const firebaseConfig = {
     rm.hidden = false;
 
     (broke || newPersonal) ? sfx.record() : sfx.over();
-    renderBoard($('list2'), $('mode2'), await loadBoard());
+    renderAll($('list2'), $('mode2'), await loadBoard());
   }
 
   $('play').onclick = begin;
